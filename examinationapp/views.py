@@ -29,12 +29,6 @@ def course_detail(request, id):
     return render(request, "course_detail.html", context)
 
 
+def rate(request):
+    return render(request, "rate.html", {})
 
-def rate(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
-    
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        return HttpResponse('Rating received') 
-    
-    return render(request, 'rate.html', {'course': course})

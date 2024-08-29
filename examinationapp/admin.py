@@ -4,5 +4,8 @@ from .models import *
 class CourseAdmin(admin.ModelAdmin):
     list_display = ["title", "rate"]
 
-admin.site.register(Course)
-admin.site.register(Lecture)
+class LectureAdmin(admin.ModelAdmin):
+    list_display = ["user", "age"]
+
+admin.site.register(Course, CourseAdmin)
+admin.site.register(Lecture, LectureAdmin)

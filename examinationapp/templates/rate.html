@@ -6,7 +6,8 @@
     <title>Rating</title>
 </head>
 <body>
-    <form action="{% url 'examinationapp:rate' course_id=course.id %}" method="POST">
+    <h1>Rating</h1>
+    <form action="{% url 'examinationapp:home' %}" method="POST">
         {% csrf_token %}
         <input type="number" name="rating" placeholder="rating" required>
         <button type="submit">Rate</button>
