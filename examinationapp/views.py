@@ -1,13 +1,40 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 
 def courses_page(request):
     courses = Course.objects.all()
     title = [course.title for course in courses]
+    descr = [course.description for course in courses]
+    rate = [course.rate for course in courses]
+
+    print(title)
     context = {
         "courses": courses,
-        "name": title,
+        "title": title,
+        "descr": descr,
+        "rate": rate,
     }
 
     return render(request, "courses.html", context)
+
+
+def course_detail(request, id):
+    course = get_object_or_404(Course, id=id)
+    context = {
+        "title": course.title,
+        "rate": course.rate,
+        "descr": course.description
+    }
+    return render(request, "course_detail.html", context)
+
+
+
+def rate(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        return HttpResponse('Rating received') 
+    
+    return render(request, 'rate.html', {'course': course})

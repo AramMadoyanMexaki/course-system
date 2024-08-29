@@ -11,10 +11,13 @@
     {% for c in courses %}
         <li class="course_item">
             <h2>
-                {{ title }}
+                <a href="{% url 'examinationapp:detail' id=c.id %}">{{ c.title }}</a>
             </h2>
+            
+            <h2>Rate: {{ c.rate }}</h2>
         </li>
-    </ul>
     {% endfor %}
+</ul>
+
 </body>
 </html>
