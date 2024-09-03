@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import *
+from django.contrib.auth import authenticate, login, logout
 
 def courses_page(request):
     courses = Course.objects.all()
@@ -8,7 +9,6 @@ def courses_page(request):
     descr = [course.description for course in courses]
     rate = [course.rate for course in courses]
 
-    print(title)
     context = {
         "courses": courses,
         "title": title,
@@ -24,11 +24,68 @@ def course_detail(request, id):
     context = {
         "title": course.title,
         "rate": course.rate,
-        "descr": course.description
+        "descr": course.description,
+        "course": course,
+        "count": course.count,
     }
     return render(request, "course_detail.html", context)
 
 
-def rate(request):
-    return render(request, "rate.html", {})
+def user_login(request):
+    if request.method == "GET":
+        return render(request, "login.html", {})
+
+    password = request.POST.get('password')
+    email = request.POST.get('email')
+
+    user = authenticate(request, password=password, email=email)
+    if user:
+        login(request, user)
+        return HttpResponseRedirect("/home/")
+    
+    return render(request, "login.html", {"error": "Username or password is wrong."})
+
+
+def register(request):
+    if request.method == "GET":
+        return render(request, "register.html", {})
+
+    password = request.POST.get("password")
+    confirm_password = request.POST.get("confirm")
+    email = request.POST.get("email")
+
+    if password == confirm_password:
+        ExaminationUser.objects.create(password=password, email=email)
+
+    return render(request, "register.html", {"error": "Username or password is wrong."})
+
+
+def rate(request, id):
+    course = get_object_or_404(Course, id=id)
+
+    if request.method == "POST":
+        new_rating = float(request.POST.get("rating", 0))
+        
+        if new_rating:
+            updated_rate = (course.rate * course.count + new_rating) / (course.count + 1)
+            course.count += 1
+            course.rate = updated_rate
+            course.save()
+
+            print(f"Updated Count: {course.count}, Updated Rate: {course.rate}")
+
+            context = {
+                'course': course,
+                "updated_rate": course.rate,
+                "count": course.count,
+            }
+            return render(request, 'rate.html', context)
+    
+    context = {
+        'course': course,
+        "updated_rate": course.rate,
+        "count": course.count,
+    }
+    
+    return render(request, 'rate.html', context)
 

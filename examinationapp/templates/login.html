@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <form action="{% url 'examinationapp:home' %}" method="GET">
+        {% csrf_token %}
+        {% if error %}
+            <p>{{error}}</p>
+        {% endif %}
+        <input type="password" placeholder="password" name="password">
+        <input type="email" placeholder="email" name="email">
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

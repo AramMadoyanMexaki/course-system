@@ -8,4 +8,5 @@ class LectureAdmin(admin.ModelAdmin):
     list_display = ["user", "age"]
 
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Lecture, LectureAdmin)
+admin.site.register(Lecture,LectureAdmin)
+admin.site.register(ExaminationUser)

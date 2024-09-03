@@ -10,7 +10,8 @@
         <h1>{{ title }}</h1>
         <h2>{{ rate }}</h2>
         <p>{{ descr }}</p>
-        <a href="{% url 'examinationapp:rate' %}">Rate</a>
+        <p>{{ count }}</p>
+        <a href="{% url 'examinationapp:rate' id=course.id %}">Rate</a>
     </div>
 </body>
 </html>
