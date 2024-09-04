@@ -62,30 +62,37 @@ def register(request):
 
 def rate(request, id):
     course = get_object_or_404(Course, id=id)
+    print("Start ", course.count)
 
     if request.method == "POST":
-        new_rating = float(request.POST.get("rating", 0))
-        
-        if new_rating:
-            updated_rate = (course.rate * course.count + new_rating) / (course.count + 1)
-            course.count += 1
-            course.rate = updated_rate
-            course.save()
+        new_rating = request.POST.get("rating")
+        print("New rating raw:", new_rating)
 
-            print(f"Updated Count: {course.count}, Updated Rate: {course.rate}")
+        if new_rating:
+            try:
+                new_rating = float(new_rating)  # Convert to float
+                updated_rate = (course.rate * course.count + new_rating) / (course.count + 1)
+                course.count += 1
+                print("End ", course.count)
+                course.rate = updated_rate
+                course.save()
+
+                print(f"Updated Count: {course.count}, Updated Rate: {course.rate}")
+            except ValueError:
+                print("Invalid rating value")
 
             context = {
                 'course': course,
                 "updated_rate": course.rate,
                 "count": course.count,
             }
+
             return render(request, 'rate.html', context)
-    
+
     context = {
         'course': course,
         "updated_rate": course.rate,
         "count": course.count,
     }
-    
-    return render(request, 'rate.html', context)
 
+    return render(request, 'rate.html', context)
