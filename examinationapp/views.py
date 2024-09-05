@@ -70,7 +70,7 @@ def rate(request, id):
 
         if new_rating:
             try:
-                new_rating = float(new_rating)  # Convert to float
+                new_rating = float(new_rating) 
                 updated_rate = (course.rate * course.count + new_rating) / (course.count + 1)
                 course.count += 1
                 print("End ", course.count)
@@ -81,13 +81,7 @@ def rate(request, id):
             except ValueError:
                 print("Invalid rating value")
 
-            context = {
-                'course': course,
-                "updated_rate": course.rate,
-                "count": course.count,
-            }
-
-            return render(request, 'rate.html', context)
+            return render(request, 'course_detail.html', {id: course.id})
 
     context = {
         'course': course,
